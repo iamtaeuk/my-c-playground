@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-// To execute C, please define "int main()"
-
 int main() {
-    
+    // one-case support only (lowercase + uppercase mix doesn't work)
     char *strus = "amanaplanacatahamayakayamahatacanalpanama";
     int length = strlen(strus);
     
@@ -17,9 +15,5 @@ int main() {
             printf("ok");
         }
     }
-    
-    
-    
-    
   return 0;
 }
