@@ -5,7 +5,7 @@ int str2int();
 
 int main() {
 
-	printf("str2int: %d \n", str2int("1235526"));
+	printf("str2int: %d \n", str2int("124582"));
 
 	return 0;
 
@@ -28,6 +28,7 @@ int str2int(char* input) {
 		} else {
 			printf("Error! - NaN \n");
 			output = 0;
+			break;
 		}
 	}
 
