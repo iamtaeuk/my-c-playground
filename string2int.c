@@ -5,7 +5,7 @@ int str2int();
 
 int main() {
 
-	str2int("1235526");
+	printf("str2int: %d \n", str2int("1235526"));
 
 	return 0;
 
@@ -27,13 +27,13 @@ int str2int(char* input) {
 			multiplier = 1;
 		} else {
 			printf("Error! - NaN \n");
-			exit();
+			output = 0;
 		}
 	}
 
-	printf("output = %d\r\n", output);
+	// DEBUG: printf("output = %d\r\n", output);
 
-	return 1;
+	return output;
 }
 
 //    convert string number to integer        "5" + "1" =  "51"
