@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // To execute C, please define "int main()"
 
@@ -24,24 +25,51 @@ PDATA insertNode(PDATA head, int data){
   return n;
 }
 
+void printNode(PDATA p){
+  printf("printNode: ------\n");
+  for(; p ; p = p->link)
+      printf("%d, ", p->data);
+  printf("\n-----------------\n");
+}
 
+PDATA deleteNode(PDATA head, int data){
+  PDATA copy = head;
+  PDATA prevNode = head;
+  for (;; copy = copy->link) {
+    if (copy == NULL)
+      break;
+    
+    if (copy->data == data) {
+      prevNode->link = copy->link;
+      free(copy);
+      break;
+    }
+    
+    prevNode = copy;
+  }
+  return head;
+}
+
+//         50 -> 40 -> 30 -> 20 -> 10 -> NULL
+//         50 -> 40 -------------> 20 -> 10 -> NULL
 
 int main() {
   
-  /*
-      head = n1 = (PADATA)malloc(sizeof(DATA));
-      n1->data = 10;
-      n1->link = NULL;
-  */
-  
-  
-  PDATA head = NULL, temp = NULL;
+  PDATA head = NULL;
   
   for(int i = 10; i < 60; i = i + 10)
     head = insertNode(head, i);
 
-  for(temp = head; temp ; temp = temp->link)
-    printf("%d \n", temp->data);
+  
+  printNode(head);
+  
+  head = deleteNode(head, 30);
+  head = deleteNode(head, 10);
+  
+  printf("\n");
+  
+  printNode(head);
+  
 
   return 0;
 }
