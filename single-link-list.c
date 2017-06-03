@@ -11,25 +11,18 @@ typedef struct _node{
 
 
 PDATA nodeAlloc(int data){
-  PDATA thing = (PDATA)malloc(sizeof(DATA));
-  thing->data = data;
-  thing->link = NULL;
-  return thing;
+  PDATA node = (PDATA)malloc(sizeof(DATA));
+  node->data = data;
+  node->link = NULL;
+  return node;
 }
 
 PDATA insertNode(PDATA head, int data){
-  PDATA n = nodeAlloc(data);
+  PDATA node = nodeAlloc(data);
   if(head == NULL)
-    return n;
-  n->link = head;
-  return n;
-}
-
-void printNode(PDATA p){
-  printf("printNode: ------\n");
-  for(; p ; p = p->link)
-      printf("%d, ", p->data);
-  printf("\n-----------------\n");
+    return node;
+  node->link = head;
+  return node;
 }
 
 PDATA deleteNode(PDATA head, int data){
@@ -40,7 +33,10 @@ PDATA deleteNode(PDATA head, int data){
       break;
     
     if (copy->data == data) {
-      prevNode->link = copy->link;
+      if (prevNode->data != copy->data)
+        prevNode->link = copy->link;
+      else
+        head = copy->link;
       free(copy);
       break;
     }
@@ -50,6 +46,24 @@ PDATA deleteNode(PDATA head, int data){
   return head;
 }
 
+void printNode(PDATA node){
+  printf("printNode: ------\n");
+  for(; node ; node = node->link)
+      printf("%d, ", node->data);
+  printf("\n-----------------\n");
+}
+
+void push(PDATA *node, int data){
+  *node = insertNode(*node, data);
+}
+
+int pop(PDATA *node){
+  PDATA copy = *node;
+  int dataToKill = copy->data;
+  *node = deleteNode(*node, dataToKill);
+  return dataToKill;
+}
+
 //         50 -> 40 -> 30 -> 20 -> 10 -> NULL
 //         50 -> 40 -------------> 20 -> 10 -> NULL
 
@@ -57,19 +71,18 @@ int main() {
   
   PDATA head = NULL;
   
-  for(int i = 10; i < 60; i = i + 10)
-    head = insertNode(head, i);
+  push(&head, 100);
+  push(&head, 200);
+  push(&head, 300);
+  push(&head, 400);
 
-  
-  printNode(head);
-  
-  head = deleteNode(head, 30);
-  head = deleteNode(head, 10);
-  
-  printf("\n");
-  
-  printNode(head);
-  
+
+  printf("%d\n", pop(&head));  //300
+  printf("%d\n", pop(&head));  //200
+  printf("%d\n", pop(&head));  //100 
+  printf("%d\n", pop(&head));  //100 
+  printNode(head); 
+
 
   return 0;
 }
