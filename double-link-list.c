@@ -5,8 +5,15 @@ typedef struct _node{
   int data;
   struct _node *prev;
   struct _node *next;
-
 } *NODE;
+
+
+typedef struct _list{
+  NODE head;    
+  NODE tail;
+} List;
+
+
 
 NODE allocNode(int data){
   NODE node = (NODE)malloc(sizeof(NODE));
@@ -16,38 +23,35 @@ NODE allocNode(int data){
   return node;
 }
 
+void Initialize(List *lt){
+  lt->head = NULL;
+  lt->tail = NULL;
+}
 
-
-
+void Add(List *lt, int data){
+  NODE node = allocNode(data);
+  if (lt->head == NULL) {
+    lt->head = lt->tail = node;
+    lt->head->next = lt->tail;
+    lt->tail->prev = lt->head;
+  } else {
+    node->next = lt->tail;
+    node->prev = lt->tail->prev;
+    lt->tail->prev = node;
+    lt->tail->prev->prev->next = node;
+  }
+  
+}
 
 int main() {
   
-
-  NODE head = NULL;
-  NODE tail = NULL;
-  NODE temp = NULL;
-
-  head = allocNode(10);
-  temp = allocNode(20);
-  tail = allocNode(30);
+  List lt;
+  Initialize(&lt);
   
-  head->next = temp->data;
-  temp->prev = head->data;
-  temp->next = tail->data;
-  tail->prev = temp->data;
+  Add(&lt, 10);
+  Add(&lt, 20);
+  Add(&lt, 30);
+  printf("%d \n", lt.head->data);
   
-  
-  
-  
-  printf("%d \n", head->data);              //10
-  printf("%d \n", head->next->data);        //20
-  printf("%d \n", head->next->next->data);  //30
-  
-  
-  //free();
-  //free();
-  //free();
-  
-  // NULL <- 10 <-> 20 <-> 30 -> NULL
   return 0;
 }
