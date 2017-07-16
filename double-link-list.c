@@ -31,28 +31,25 @@ void Initialize (List *lt){
 }
 
 void Uninitialize (List *lt) {
-  NODE temp = lt->head;
-  NODE cursor = temp->next;
-  free(temp);
-
+  NODE temp = lt->head->next; 
   while (TRUE){
-    if (cursor->next == NULL) {
-      free(cursor);
+    free(temp->prev);
+    temp = temp->next;
+    
+    if (temp->next == NULL){
+      free(temp->prev);
+      free(temp);
       break;
     }
-
-    free(cursor->next);
   }
-
 }
 
 void Add (List *lt, int data){
   NODE node = allocNode(data);
   if (lt->head == NULL) {
-    printf("HEAD TAIL EXEC \n");
     lt->head = lt->tail = node;
   } else {
-    lt->head->next = node;   
+    lt->tail->next = node;
     node->prev = lt->tail;
     lt->tail = node;
   }
@@ -64,7 +61,6 @@ void Print(List *lt){
   // Next Time
 
   NODE temp = lt->head;
-  printf("%d\n", lt->head->next->data);
   for (;; temp = temp->next) {
     printf("%d: %d & %p\n", temp->data, temp->data, temp);
     if (temp->next == NULL)
@@ -94,7 +90,9 @@ int main(void) {
 
   printf("before: %d %d %d \n", one->data, two->data, three->data);
   */
-  //Uninitialize(&lt);
+  Uninitialize(&lt);
+  
+  Print(&lt);
 
  // printf("\n\nAfter: %d %d %d \n", one->data, two->data, three->data);
 
