@@ -11,7 +11,7 @@ typedef struct _node{
 
 
 typedef struct _list{
-  NODE head;    
+  NODE head;
   NODE tail;
 } List;
 
@@ -32,67 +32,82 @@ void Initialize (List *lt){
 
 void Uninitialize (List *lt) {
   NODE temp = lt->head;
-  free(lt->head);
-  for (int i = 0; i < 5; i++){
-  //  printf("%d\n",temp->data);
-    temp = temp->next->next;
-  //  printf("temp->prev: %d \n", temp->prev->data);
-    temp->prev->data = 0;
-    free(temp->prev);
+  NODE cursor = temp->next;
+  free(temp);
+
+  while (TRUE){
+    if (cursor->next == NULL) {
+      free(cursor);
+      break;
+    }
+
+    free(cursor->next);
   }
+
 }
 
 void Add (List *lt, int data){
   NODE node = allocNode(data);
   if (lt->head == NULL) {
+    printf("HEAD TAIL EXEC \n");
     lt->head = lt->tail = node;
-    lt->tail->prev = lt->head;
-  } else if (lt->head == lt->tail) {
-    node->prev = lt->head;
-    lt->head->next = lt->tail;
-    lt->tail = node;
   } else {
-    lt->tail->prev->next = node;
-    node->prev = lt->tail->prev;
+    lt->head->next = node;   
+    node->prev = lt->tail;
     lt->tail = node;
   }
-  
 }
 
 
 void Print(List *lt){
+
+  // Next Time
+
   NODE temp = lt->head;
-  for(; temp == lt->tail ; temp = temp->next)
-    printf("%d\n", temp->data);
+  printf("%d\n", lt->head->next->data);
+  for (;; temp = temp->next) {
+    printf("%d: %d & %p\n", temp->data, temp->data, temp);
+    if (temp->next == NULL)
+      break;
+  }
 }
 
 
 int main(void) {
-  
+
   List lt;
   Initialize(&lt);
-  
+
   Add(&lt, 10);
   Add(&lt, 20);
   Add(&lt, 30);
+  Add(&lt, 40);
+  Add(&lt, 50);
 
-  //Print(&lt);
-  
+  Print(&lt);
+
   //printf("%d \n", lt.head->next->next->next->data);
   /*
   NODE one = lt.head;
   NODE two = lt.head->next;
   NODE three = lt.head->next->next;
-  
+
   printf("before: %d %d %d \n", one->data, two->data, three->data);
   */
   //Uninitialize(&lt);
 
-  
  // printf("\n\nAfter: %d %d %d \n", one->data, two->data, three->data);
-  
-  printf("30: %d \n", lt.tail->data);
-  printf("20: %d \n", lt.tail->prev->data);
-  printf("10: %d \n", lt.tail->prev->prev->data);
+
+  /*
+
+  printf("50: %d \n", lt.tail->data);
+  printf("50: %d \n", lt.tail->prev->data);
+  printf("50: %d \n", lt.tail->prev->prev->data);
+  printf("40: %d \n", lt.tail->prev->prev->prev->data);
+  printf("30: %d \n", lt.tail->prev->prev->prev->prev->data);
+  printf("20: %d \n", lt.tail->prev->prev->prev->prev->prev->data);
+  printf("10: %d \n", lt.tail->prev->prev->prev->prev->prev->prev->data);
+
+  */
   return 0;
 }
