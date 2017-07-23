@@ -13,6 +13,8 @@ typedef struct _node{
 typedef struct _list{
   NODE head;
   NODE tail;
+  NODE current;
+  
 } List;
 
 
@@ -50,13 +52,47 @@ void Uninitialize (List *lt) {
 
 void Add (List *lt, int data){
   NODE node = allocNode(data);
-  lt->tail->prev = node;
   lt->tail->prev->next = node;
+  node->prev = lt->tail->prev;
+  lt->tail->prev = node;
   node->next = lt->tail;
 }
 
 
-void Print(List *lt){
+void Reset(List* lt){
+  lt->current = lt->head->next;  
+}
+
+int GetItem(List* lt){
+  return lt->current->data;
+}
+
+void Next(List *lt){
+  lt->current = lt->current->next;
+}
+
+int HasNext(List *lt){
+  return lt->current == lt->tail ? 0 : 1;
+}
+
+void Insert(List* lt, int data){
+  NODE node = allocNode(data);
+  lt->current->prev->next = node;
+  node->prev = lt->current->prev;
+  lt->current->prev = node;
+  node->next = lt->current;
+  lt->current = node->prev;
+}
+
+void Remove(List *lt){
+  lt->current->prev->next = lt->current->next;
+  lt->current->next->prev = lt->current->prev;
+  free(lt->current);
+  Reset(lt);
+}
+
+
+void Print(List *lt) {
 
   // Next Time
 
@@ -79,8 +115,28 @@ int main(void) {
   Add(&lt, 30);
   Add(&lt, 40);
   Add(&lt, 50);
+  Add(&lt, 60);
+  Add(&lt, 70);
 
-  Print(&lt);
+  // approach current data at 20
+  for(Reset(&lt); HasNext(&lt); Next(&lt)){
+    if(20 == GetItem(&lt))
+      break;
+  }
+    Insert(&lt, 90);
+    Print(&lt);
+  
+  // approach current data at 90
+    for(Reset(&lt); HasNext(&lt); Next(&lt)){
+    if(90 == GetItem(&lt))
+      break;
+  }
+    Remove(&lt);
+    Print(&lt);
+  
+  
+ // lt->current = lt->tail->prev;
+ // printf("HasNext: %d \n", HasNext(&lt));
 
   //printf("%d \n", lt.head->next->next->next->data);
   /*
