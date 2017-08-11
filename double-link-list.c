@@ -58,6 +58,14 @@ void Add (List *lt, int data){
   node->next = lt->tail;
 }
 
+void AddHead(List *lt, int data){
+  NODE node = allocNode(data);
+  lt->head->next->prev = node;
+  node->next = lt->head->next;
+  lt->head->next = node;
+  node->prev = lt->head;
+  lt->current = node;
+}
 
 void Reset(List* lt){
   lt->current = lt->head->next;  
@@ -91,11 +99,33 @@ void Remove(List *lt){
   Reset(lt);
 }
 
+void RemoveHead(List *lt){
+  NODE headToRemove = lt->head->next;
+  lt->head->next = lt->head->next->next;
+  lt->head->next->prev = lt->head;
+  Reset(lt);
+  free(headToRemove);
+}
+
+void RemoveTail(List *lt){
+  NODE tailToRemove = lt->tail->prev;
+  lt->tail->prev = lt->tail->prev->prev;
+  lt->tail->prev->next = lt->tail;
+  Reset(lt);
+  free(tailToRemove);
+}
+
+void SeqSearch(List *lt, int data){
+  NODE temp = lt->head;
+  for (int i = -1;; temp = temp->next, i++) {
+    if (temp->data == data)
+      printf(" [%d]:%d \n", i, data);
+    if (temp->next == NULL)
+      break;
+  }
+}
 
 void Print(List *lt) {
-
-  // Next Time
-
   NODE temp = lt->head;
   for (;; temp = temp->next) {
     printf("%d: %d & %p\n", temp->data, temp->data, temp);
@@ -111,13 +141,19 @@ int main(void) {
   Initialize(&lt);
 
   Add(&lt, 10);
-  Add(&lt, 20);
+  Add(&lt, 60);
   Add(&lt, 30);
   Add(&lt, 40);
   Add(&lt, 50);
   Add(&lt, 60);
   Add(&lt, 70);
+  
+ //Print(&lt);
+  
+  SeqSearch(&lt, 60);
+  
 
+  /*
   // approach current data at 20
   for(Reset(&lt); HasNext(&lt); Next(&lt)){
     if(20 == GetItem(&lt))
@@ -133,7 +169,7 @@ int main(void) {
   }
     Remove(&lt);
     Print(&lt);
-  
+  */
   
  // lt->current = lt->tail->prev;
  // printf("HasNext: %d \n", HasNext(&lt));
