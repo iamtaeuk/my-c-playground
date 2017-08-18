@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define TRUE 1
 
@@ -134,70 +135,56 @@ void Print(List *lt) {
   }
 }
 
+void GenRandomNum(int *arr, int size, int range){
+  srand(time(NULL));
+  int num = 0;
+  for (int i = 0; i < size; i++){
+    RAND:
+    num = rand() % range + 1;
+    // num = (rand() % (max + 1 - min)) + min
+    for (int j = 0; j < size; j++)
+      if(arr[j] == num)
+        goto RAND;
+    arr[i] = num;
+  }
+}
+
+void swap(int *a, int *b){
+  int temp = *b;
+  *b = *a;
+  *a = temp;
+}
+
+
+void BubbleSort(int *arr, int size){
+  for (int i = size; i > 0; i--){
+    for (int j = 0; j < size - 1; j++){
+      if(arr[j] > arr[j+1]){
+        swap(&arr[j], &arr[j+1]);
+      } else if (arr[j+1] == "\0"){
+        continue;
+      }
+    }
+  }
+}
 
 int main(void) {
 
   List lt;
   Initialize(&lt);
 
-  Add(&lt, 10);
-  Add(&lt, 60);
-  Add(&lt, 30);
-  Add(&lt, 40);
-  Add(&lt, 50);
-  Add(&lt, 60);
-  Add(&lt, 70);
+  int SIZE = 60;
   
- //Print(&lt);
+  int arr[SIZE];
+    
+  GenRandomNum(arr, SIZE, SIZE * 2);
+  BubbleSort(arr, SIZE);
+
+  for (int i = 0; i < SIZE; i++)
+    Add(&lt, arr[i]);
   
-  SeqSearch(&lt, 60);
+  Print(&lt);
   
-
-  /*
-  // approach current data at 20
-  for(Reset(&lt); HasNext(&lt); Next(&lt)){
-    if(20 == GetItem(&lt))
-      break;
-  }
-    Insert(&lt, 90);
-    Print(&lt);
   
-  // approach current data at 90
-    for(Reset(&lt); HasNext(&lt); Next(&lt)){
-    if(90 == GetItem(&lt))
-      break;
-  }
-    Remove(&lt);
-    Print(&lt);
-  */
-  
- // lt->current = lt->tail->prev;
- // printf("HasNext: %d \n", HasNext(&lt));
-
-  //printf("%d \n", lt.head->next->next->next->data);
-  /*
-  NODE one = lt.head;
-  NODE two = lt.head->next;
-  NODE three = lt.head->next->next;
-
-  printf("before: %d %d %d \n", one->data, two->data, three->data);
-  */
-  //Uninitialize(&lt);
-  
-  //Print(&lt);
-
- // printf("\n\nAfter: %d %d %d \n", one->data, two->data, three->data);
-
-  /*
-
-  printf("50: %d \n", lt.tail->data);
-  printf("50: %d \n", lt.tail->prev->data);
-  printf("50: %d \n", lt.tail->prev->prev->data);
-  printf("40: %d \n", lt.tail->prev->prev->prev->data);
-  printf("30: %d \n", lt.tail->prev->prev->prev->prev->data);
-  printf("20: %d \n", lt.tail->prev->prev->prev->prev->prev->data);
-  printf("10: %d \n", lt.tail->prev->prev->prev->prev->prev->prev->data);
-
-  */
   return 0;
 }
